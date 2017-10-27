@@ -1,0 +1,45 @@
+import pandas as pd
+import numpy as np
+
+def answer_one():
+    xls_file = pd.ExcelFile('Energy Indicators.xls')
+    energy = xls_file.parse(skiprows=17,skip_footer=(38))
+    energyAll = xls_file.parse('Energy')
+    energytry = xls_file.parse(skiprows=17,skip_footer=(38))
+    energytry = energytry.drop(['Unnamed: 0','Unnamed: 1'],1)
+    # reset columns to the required
+    energytry.columns=['Country', 'Energy Supply', 'Energy Supply per Capita', '% Renewable']
+    energytry2=energytry.copy()
+    # replace ''...' with np.NaN and converted to NaN
+    energytry2[['Energy Supply', 'Energy Supply per Capita', '% Renewable']]=energytry2[['Energy Supply', 'Energy Supply per Capita', '% Renewable']].replace('...',np.NaN).apply(pd.to_numeric)
+    # convert  petajoule to gigajoules
+    energytry2['Energy Supply'] = energytry2['Energy Supply']*1000000
+    # "\d" is digit    " \(.*\)" 
+    energytry2['Country'].replace(regex=True,inplace=True,to_replace=r'\d',value=r'')
+    energytry2['Country'].replace(regex=True,inplace=True,to_replace=r' \(.*\)',value=r'')
+    # replaced the four required countries 
+    energytry2['Country']=energytry2['Country'].replace({"Republic of Korea": "South Korea", "United States of America": "United States", "United Kingdom of Great Britain and Northern Ireland": "United Kingdom", "China, Hong Kong Special Administrative Region": "Hong Kong"}) 
+    # check if replacement works 
+    energytry2[(energytry2['Country']=='South Korea') | (energytry2['Country']=='United Kingdom') | (energytry2['Country']=='United States')| (energytry2['Country']=='Hong Kong')]
+
+    GDP = pd.read_csv('world_bank.csv',skiprows=4)
+    GDP2 = GDP.copy()
+     # replaced the four required countries 
+    GDP2['Country Name']=GDP2['Country Name'].replace({"Korea, Rep.": "South Korea", "Iran, Islamic Rep.": "Iran", "Hong Kong SAR, China": "Hong Kong"}) 
+     # check if replacement works 
+    GDP2[(GDP2['Country Name']=='South Korea') | (GDP2['Country Name']=='Iran') | (GDP2['Country Name']=='Hong Kong')]
+    GDP3 = GDP2
+    GDP4 = GDP3[['Country Name','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015']]
+    
+    
+    ScimEn = pd.read_excel(io='scimagojr-3.xlsx')
+    ScimEn2 = ScimEn[:15]
+    part1 = pd.merge(energytry2,GDP4,how='left',left_on = 'Country', right_on='Country Name')
+    part1.drop('Country Name',axis=1, inplace=True)
+    part2 = pd.merge(ScimEn2,part1,how='inner', left_on = 'Country', right_on = 'Country')
+    final = part2.set_index('Country')
+    
+    return final
+
+
+answer_one()
