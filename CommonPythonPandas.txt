@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-##### numpy  #########################################################################
+##### &&& numpy  #########################################################################
 x = [1, 2, 3, 4, 5, 6]
 x.extend([7,8])
 x.append(9)
@@ -14,7 +14,9 @@ incomes = np.random.normal(27000, 15000, 10000)
 ages = np.random.randint(18, high=90, size=500)
 np.mean(incomes)
 np.median(incomes)
+s = np.std(data)
 import scipy.stats as sp
+# skew and kurtosis
 sp.skew(vals) # third and fourth
 sp.kurtosis(vals) #
 
@@ -63,7 +65,7 @@ for _ in range(100000):
 ####################################################################### numpy  #####
 
 
-##### MatPlotLib Basics ############################################################ 
+##### &&& MatPlotLib Basics ############################################################ 
 
 
 plt.plot(x, norm.pdf(x))
@@ -73,15 +75,18 @@ plt.savefig('C:\\Users\\Frank\\MyPlot.png', format='png')
 from scipy.stats import binom
 import matplotlib.pyplot as plt
 
-
+#Adjust the Axes
 axes = plt.axes()
 axes.set_xlim([-5, 5])
 axes.set_ylim([0, 1.0])
 axes.set_xticks([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5])
 axes.set_yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+#Add a grid
 axes.grid()
+#change line types and colors
 plt.plot(x, norm.pdf(x), 'b-')
 plt.plot(x, norm.pdf(x, 1.0, 0.5), 'r:')
+# legend 
 plt.legend(['Sneetches', 'Gacks'], loc=4) # 4 lower right handside corner
 plt.show()
 
@@ -104,8 +109,9 @@ colors = ['r', 'g', 'b', 'c', 'm']
 plt.bar(range(0,5), values, color= colors)
 plt.show()
 
-
-
+# histogram  
+plt.hist(values, 50)
+plt.show()
 
 
 # commic style 
@@ -138,6 +144,36 @@ X = randn(500)
 Y = randn(500)
 plt.scatter(X,Y)
 plt.show()
+
+# title and label
+import matplotlib.pyplot as plt
+
+def display_sample(num):
+    #Print the one-hot array of this sample's label 
+    print(train_labels[num])  
+    #Print the label converted back to a number
+    label = train_labels[num].argmax(axis=0)
+    #Reshape the 768 values to a 28x28 image
+    image = train_images[num].reshape([28,28])
+    plt.title('Sample: %d  Label: %d' % (num, label))
+    plt.imshow(image, cmap=plt.get_cmap('gray_r'))
+    plt.show()
+    
+display_sample(1234)
+
+# text includes roman 
+import numpy as np
+
+sample_data.plot(kind='scatter', x="GDP per capita", y='Life satisfaction', figsize=(5,3))
+plt.axis([0, 60000, 0, 10])
+X=np.linspace(0, 60000, 1000)
+plt.plot(X, 2*X/100000, "r")
+plt.text(40000, 2.7, r"$\theta_0 = 0$", fontsize=14, color="r")
+plt.text(40000, 1.8, r"$\theta_1 = 2 \times 10^{-5}$", fontsize=14, color="r")
+save_fig('tweaking_model_params_plot')
+plt.show()
+
+#
 
 
 
@@ -191,18 +227,49 @@ plt.figure(figsize=(8, 6))
 plt.scatter(data[:,0], data[:,1], c=model.labels_.astype(float))
 plt.show()
 
+# save it to a file
+plt.plot(x, norm.pdf(x))
+plt.plot(x, norm.pdf(x, 1.0, 0.5))
+plt.savefig('C:\\Users\\Frank\\MyPlot.png', format='png')
+
+
 ############################################################ MatPlotLib Basics #####
 
-##### scipy ######################################################################## 
 
 
+
+##### &&& scipy ######################################################################## 
+
+
+### linear regression 
+%matplotlib inline
+import numpy as np
+from pylab import *
+
+pageSpeeds = np.random.normal(3.0, 1.0, 1000)
+purchaseAmount = 100 - (pageSpeeds + np.random.normal(0, 0.1, 1000)) * 3
+
+scatter(pageSpeeds, purchaseAmount)
 
 from scipy import stats
-
 slope, intercept, r_value, p_value, std_err = stats.linregress(pageSpeeds, purchaseAmount)
 # r_value
+r_value ** 2
 
-##
+### plot predicted model  
+import matplotlib.pyplot as plt
+
+def predict(x):
+    return slope * x + intercept
+
+fitLine = predict(pageSpeeds)
+
+plt.scatter(pageSpeeds, purchaseAmount)
+plt.plot(pageSpeeds, fitLine, c='r')
+plt.show()
+
+### polynominal regression
+
 %matplotlib inline
 from pylab import *
 import numpy as np
@@ -274,7 +341,7 @@ ComputeDistance(movieDict[2], movieDict[4])
 ######################################################################## scipy #####
  
 
-##### pandas #######################################################################           
+##### &&& pandas #######################################################################           
 
 
 # indexing and selecting data 
@@ -297,6 +364,35 @@ GDP = pd.read_csv('world_bank.csv',skiprows=4)
 ScimEn = pd.read_excel(io='scimagojr-3.xlsx')
 ScimEn2 = ScimEn[:15]
 
+# 
+gdp_per_capita = pd.read_csv(datapath+"gdp_per_capita.csv", thousands=',', delimiter='\t',
+                             encoding='latin1', na_values="n/a")
+gdp_per_capita.rename(columns={"2015": "GDP per capita"}, inplace=True)
+gdp_per_capita.set_index("Country", inplace=True)
+
+
+### reading data, restrip and split.  
+0   50  5   881250949
+0   172 5   881250949
+##
+movieDict = {} 
+with open(r'/home/j2/Desktop/PythonTry/DataScience-Python3/ml-100k/u.item','r',encoding="ISO-8859-1") as f:
+    temp = ''
+    for line in f:
+        #line.decode("ISO-8859-1")
+        fields = line.rstrip('\n').split('|')
+        movieID = int(fields[0])
+        name = #fields[1]
+        genres = fields[5:25]
+        genres = map(int, genres)
+        movieDict[movieID] = (name, np.array(list(genres)), movieNormalizedNumRatings.loc[movieID].get('size'), movieProperties.loc[movieID].rating.get('mean'))
+
+
+## replace the question mark ? 
+voting_data = pd.read_csv('house-votes-84.data.txt', na_values=['?'], 
+                          names = feature_names)
+
+
 
 #### with seperation 
 movieDict = {}
@@ -310,6 +406,47 @@ with open(r'D:\dk_ze\IamAProgrammer\Machine_Learning\DataSciencePython\DataScien
         genres = fields[5:25]
         genres = map(int, genres)
         movieDict[movieID] = (name, np.array(list(genres)), movieNormalizedNumRatings.loc[movieID].get('size'), movieProperties.loc[movieID].rating.get('mean'))
+
+### display the empty data 
+masses_data.loc[(masses_data['age'].isnull()) |
+              (masses_data['shape'].isnull()) |
+              (masses_data['margin'].isnull()) |
+              (masses_data['density'].isnull())]
+
+### convert data frame to numpy array 
+
+all_features = masses_data[['age', 'shape',
+                             'margin', 'density']].values
+
+
+all_classes = masses_data['severity'].values
+
+feature_names = ['age', 'shape', 'margin', 'density']
+
+all_features
+
+
+
+
+
+
+######### distance between two logical arrays 
+
+from scipy import spatial
+
+def ComputeDistance(a, b):
+    genresA = a[1]
+    genresB = b[1]
+    genreDistance = spatial.distance.cosine(genresA, genresB)
+    popularityA = a[2]
+    popularityB = b[2]
+    popularityDistance = abs(popularityA - popularityB)
+    return genreDistance + popularityDistance
+    
+ComputeDistance(movieDict[2], movieDict[4])
+
+
+
 
 
 
@@ -352,10 +489,22 @@ GDP4 = GDP3[['Country Name','2006','2007','2008','2009','2010','2011','2012','20
 
 #get one column
  df1.loc['a']
+# one value 
+cyprus_gdp_per_capita = gdp_per_capita.loc["Cyprus"]["GDP per capita"] # [row name][col name]
+
 # slice columns 
 df1 = df[['a','b']]
 #select multiples row with its name,and three columns. 
 df1.loc['d':, 'A':'C']
+# multiple columns and a row
+full_country_stats[["GDP per capita", 'Life satisfaction']].loc["United States"]
+# multiple columns and most of the rows
+remove_indices = [0, 1, 6, 8, 33, 34, 35]
+keep_indices = list(set(range(36)) - set(remove_indices))
+sample_data = full_country_stats[["GDP per capita", 'Life satisfaction']].iloc[keep_indices]
+
+
+
 # boolean array
 df1.loc['a'] > 0
 df1.loc[:, df1.loc['a'] > 0]
@@ -486,6 +635,13 @@ simCandidates = simCandidates.groupby(simCandidates.index).sum()
 GDP2.shape
 
 
+#### more math functions in Pandas
+# correlation matrix using Pandas
+corrMatrix = userRatings.corr()
+corrMatrix = userRatings.corr(method='pearson', min_periods=100)
+
+
+
 ####################################################################### pandas ##### 
 
 ### PCA 
@@ -510,8 +666,38 @@ X_pca = pca.transform(X)
 
 
 
-##### sklearn #######################################################################
-# PCA 
+##### &&& sklearn #######################################################################
+
+
+## Normalization 
+from sklearn import preprocessing
+
+scaler = preprocessing.StandardScaler()
+all_features_scaled = scaler.fit_transform(all_features)
+all_features_scaled
+
+
+
+
+
+############## Multivariate Regression
+import statsmodels.api as sm
+from sklearn.preprocessing import StandardScaler
+scale = StandardScaler()
+
+X = df[['Mileage', 'Cylinder', 'Doors']]
+y = df['Price']
+
+X[['Mileage', 'Cylinder', 'Doors']] = scale.fit_transform(X[['Mileage', 'Cylinder', 'Doors']].as_matrix())
+
+print (X)
+
+est = sm.OLS(y, X).fit()
+
+est.summary()
+
+
+############## PCA 
 from sklearn.datasets import load_iris
 from sklearn.decomposition import PCA
 import pylab as pl
@@ -548,6 +734,80 @@ for i, c, label in zip(target_ids, colors, iris.target_names):
 pl.legend()
 pl.show()
 
+################ Kmeans clustering 
+
+%matplotlib inline
+
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import scale
+from numpy import random, float
+
+data = createClusteredData(100, 5)
+model = KMeans(n_clusters=5)
+# Note I'm scaling the data to normalize it! Important for good results.
+model = model.fit(scale(data))
+# We can look at the clusters each data point was assigned to
+print(model.labels_)
+# And we'll visualize it:
+plt.figure(figsize=(8, 6))
+plt.scatter(data[:,0], data[:,1], c=model.labels_.astype(float))
+plt.show()
+
+############## naive bayes 
+
+import os
+import io
+import numpy
+from pandas import DataFrame
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+
+def readFiles(path):
+    for root, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+
+            inBody = False
+            lines = []
+            f = io.open(path, 'r', encoding='latin1')
+            for line in f:
+                if inBody:
+                    lines.append(line)
+                elif line == '\n':
+                    inBody = True
+            f.close()
+            message = '\n'.join(lines)
+            yield path, message
+
+
+def dataFrameFromDirectory(path, classification):
+    rows = []
+    index = []
+    for filename, message in readFiles(path):
+        rows.append({'message': message, 'class': classification})
+        index.append(filename)
+
+    return DataFrame(rows, index=index)
+
+data = DataFrame({'message': [], 'class': []})
+
+data = data.append(dataFrameFromDirectory('e:/sundog-consult/Udemy/DataScience/emails/spam', 'spam'))
+data = data.append(dataFrameFromDirectory('e:/sundog-consult/Udemy/DataScience/emails/ham', 'ham'))
+
+# split up each message into its list of word
+vectorizer = CountVectorizer()
+counts = vectorizer.fit_transform(data['message'].values)
+
+classifier = MultinomialNB()
+targets = data['class'].values
+classifier.fit(counts, targets)
+# test 
+examples = ['Free Viagra now!!!', "Hi Bob, how about a game of golf tomorrow?"]
+example_counts = vectorizer.transform(examples)
+predictions = classifier.predict(example_counts)
+predictions
+
 
 ########## cross-validation and train test split ############# 
 import numpy as np
@@ -564,6 +824,18 @@ clf = svm.SVC(kernel='linear', C=1).fit(X_train, y_train)
 
 # Now measure its performance with the test data
 clf.score(X_test, y_test)   
+
+##### K-Fold cross validation implementation 
+# We give cross_val_score a model, the entire data set and its "real" values, and the number of folds:
+scores = cross_val_score(clf, iris.data, iris.target, cv=5)
+
+# Print the accuracy for each fold:
+print(scores)
+
+# And the mean accuracy of all 5 folds:
+print(scores.mean())
+
+
 
 
 # Split the iris data into train/test data sets with 40% reserved for testing
@@ -594,7 +866,7 @@ clf.score(X_test, y_test)
 
 
 
-##### tensorflow #######################################################################
+##### &&& tensorflow #######################################################################
 
 # inital test
 import tensorflow as tf
@@ -642,12 +914,197 @@ display_sample(1234)
 
 
 
+##### &&& keras #######################################################################
+
+############# neural network
+from keras.layers import Dense, Dropout
+from keras.models import Sequential
+from sklearn.model_selection import cross_val_score
+
+def create_model():
+    model = Sequential()
+    #16 feature inputs (votes) going into an 32-unit layer 
+    model.add(Dense(32, input_dim=16, kernel_initializer='normal', activation='relu'))
+    # Another hidden layer of 16 units
+    model.add(Dense(16, kernel_initializer='normal', activation='relu'))
+    # Output layer with a binary classification (Democrat or Republican political party)
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+    # Compile model
+    model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    return model
+
+from keras.wrappers.scikit_learn import KerasClassifier
+
+# Wrap our Keras model in an estimator compatible with scikit_learn
+estimator = KerasClassifier(build_fn=create_model, nb_epoch=100, verbose=0)
+# Now we can use scikit_learn's cross_val_score to evaluate this model identically to the others
+cv_scores = cross_val_score(estimator, all_features, all_classes, cv=10)
+cv_scores.mean()
 
 
-##### general python #######################################################################
+############## CNN as an example ################
+import keras
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Conv2D, MaxPooling2D, Flatten
+from keras.optimizers import RMSprop
+
+# load the mnist data 
+(mnist_train_images, mnist_train_labels), (mnist_test_images, mnist_test_labels) = mnist.load_data()
+
+
+from keras import backend as K
+
+if K.image_data_format() == 'channels_first':
+    train_images = mnist_train_images.reshape(mnist_train_images.shape[0], 1, 28, 28)
+    test_images = mnist_test_images.reshape(mnist_test_images.shape[0], 1, 28, 28)
+    input_shape = (1, 28, 28)
+else:
+    train_images = mnist_train_images.reshape(mnist_train_images.shape[0], 28, 28, 1)
+    test_images = mnist_test_images.reshape(mnist_test_images.shape[0], 28, 28, 1)
+    input_shape = (28, 28, 1)
+    
+train_images = train_images.astype('float32')
+test_images = test_images.astype('float32')
+# value normalization 
+train_images /= 255
+test_images /= 255
+# convert to one-hot format
+train_labels = keras.utils.to_categorical(mnist_train_labels, 10)
+test_labels = keras.utils.to_categorical(mnist_test_labels, 10)
+# 
+
+
+# math related in Keras # building model
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu',
+                 input_shape=input_shape))
+# 64 3x3 kernels
+model.add(Conv2D(64, (3, 3), activation='relu'))
+# Reduce by taking the max of each 2x2 block
+model.add(MaxPooling2D(pool_size=(2, 2)))
+# Dropout to avoid overfitting
+model.add(Dropout(0.25))
+# Flatten the results to one dimension for passing into our final layer
+model.add(Flatten())
+# A hidden layer to learn with
+model.add(Dense(128, activation='relu'))
+# Another dropout
+model.add(Dropout(0.5))
+# Final categorization from 0-9 with softmax
+model.add(Dense(10, activation='softmax'))
+
+# description 
+model.summary()
+
+# compile 
+model.compile(loss='categorical_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
+
+# fitting
+history = model.fit(train_images, train_labels,
+                    batch_size=32,
+                    epochs=10,
+                    verbose=2,
+                    validation_data=(test_images, test_labels))              
+
+score = model.evaluate(test_images, test_labels, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
+
+
+
+############## RNN as an example ################
+
+from keras.preprocessing import sequence
+from keras.models import Sequential
+from keras.layers import Dense, Embedding
+from keras.layers import LSTM
+from keras.datasets import imdb # imdb dataset 
+
+print('Loading data...')
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=20000)
+
+# limit and pad the lenth of an array 
+x_train = sequence.pad_sequences(x_train, maxlen=80)
+x_test = sequence.pad_sequences(x_test, maxlen=80)
+
+# model building
+model = Sequential()
+model.add(Embedding(20000, 128))
+model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(1, activation='sigmoid'))
+
+# complie 
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
+
+# fitting 
+model.fit(x_train, y_train,
+          batch_size=32,
+          epochs=15,
+          verbose=2,
+          validation_data=(x_test, y_test))
+
+# evaluation 
+score, acc = model.evaluate(x_test, y_test,
+                            batch_size=32,
+                            verbose=2)
+print('Test score:', score)
+print('Test accuracy:', acc)
+
+
+
+
+####################################################################### keras ##### 
+
+
+
+
+
+
+
+
+
+##### &&& python general #######################################################################
+
+# data type 
+type(Y)
+
 
     image = mnist.train.images[num].reshape([28,28])
+#append
+simCandidates = simCandidates.append(sims)
 
+# Dealing with Outliers
+def reject_outliers(data):
+    u = np.median(data)
+    s = np.std(data)
+    filtered = [e for e in data if (u - 2 * s < e < u + 2 * s)]
+    return filtered
+
+filtered = reject_outliers(incomes)
+
+plt.hist(filtered, 50)
+plt.show()
+
+
+### zip 
+### The zip() function returns an iterator of tuples based on the iterable object.
+%matplotlib inline
+from pylab import *
+
+colors = cycle('rgb')
+target_ids = range(len(iris.target_names))
+pl.figure()
+for i, c, label in zip(target_ids, colors, iris.target_names):
+    pl.scatter(X_pca[iris.target == i, 0], X_pca[iris.target == i, 1],
+        c=c, label=label)
+pl.legend()
+pl.show()
 
 ####################################################################### general python ##### 
 
@@ -662,7 +1119,81 @@ display_sample(1234)
 
 
 
-##### pandas #######################################################################
+##### &&& math related #######################################################################
+
+####################################################################### math related ##### 
+
+
+### demean and covariance   
+%matplotlib inline
+
+import numpy as np
+from pylab import *
+
+def de_mean(x):
+    xmean = mean(x)
+    return [xi - xmean for xi in x]
+
+def covariance(x, y):
+    n = len(x)
+    return dot(de_mean(x), de_mean(y)) / (n-1)
+
+pageSpeeds = np.random.normal(3.0, 1.0, 1000)
+purchaseAmount = np.random.normal(50.0, 10.0, 1000)
+
+scatter(pageSpeeds, purchaseAmount)
+
+covariance (pageSpeeds, purchaseAmount)
+
+
+### correlation 
+def correlation(x, y):
+    stddevx = x.std()
+    stddevy = y.std()
+    return covariance(x,y) / stddevx / stddevy  #In real life you'd check for divide by zero here
+
+correlation(pageSpeeds, purchaseAmount)
+
+np.corrcoef(pageSpeeds, purchaseAmount)
+
+### Gaussian 
+from scipy.stats import norm
+import matplotlib.pyplot as plt
+
+x = np.arange(-3, 3, 0.001)
+plt.plot(x, norm.pdf(x))
+
+
+### Exponential PDF 
+from scipy.stats import expon
+
+x = np.arange(0, 10, 0.001)
+plt.plot(x, expon.pdf(x))
+
+### Binomial Probability Mass Function
+from scipy.stats import binom
+
+n, p = 10, 0.5
+x = np.arange(0, 10, 0.001)
+plt.plot(x, binom.pmf(x, n, p))
+
+### Poisson Probability Mass Function
+
+from scipy.stats import poisson
+import matplotlib.pyplot as plt
+
+mu = 500
+x = np.arange(400, 600, 0.5)
+plt.plot(x, poisson.pmf(x, mu))
+
+
+
+
+
+
+
+
+##### &&& pandas #######################################################################
 
 ####################################################################### pandas ##### 
 
